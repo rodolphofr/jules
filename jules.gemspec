@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.email         = "rodolpho.frodrigues@gmail.com"
 
   spec.summary       = "A Page Object Model DSL for Calabash Android"
-  spec.description   = "A Page Object Model DSL for Calabash Android"
-  spec.homepage      = "https://github.com/rodolphofr/jules"
+  spec.description   = "A awesome Page Object Model DSL for Calabash Android"
+  spec.homepage      = "https://github.com/rodolphofr/jules.git"
   spec.license       = "MIT"
 
   spec.files         = Dir.glob('lib/**/*')
