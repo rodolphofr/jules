@@ -37,7 +37,7 @@ module Jules
         coordinate.from_y, coordinate.to_y, coordinate.steps)
     end
 
-    def until_not_have_same_content(opts = { raise_if_not_found: nil })
+    def until_not_have_same_content(options = { raise_if_not_found: nil })
       current_content = query('*')
       last_content = nil
 
@@ -47,7 +47,7 @@ module Jules
         current_content = query('*')
       end
 
-      element = opts[:raise_if_not_found]
+      element = options[:raise_if_not_found]
       raise Jules::Exceptions::ElementNotFoundError,
         "Element not found with query \"#{element}\"" if element
     end
@@ -73,11 +73,11 @@ module Jules
       }
     end
 
-    def search(element, opts = {})
-      opts = default_scroll_options.merge(opts)
+    def search(element, options = {})
+      options = default_scroll_options.merge(options)
       until_not_have_same_content raise_if_not_found: element do
         break if element_exists(element)
-        scroll_by_type opts[:scroll_type], opts[:direction]
+        scroll_by_type options[:scroll_type], options[:direction]
       end
     end
 

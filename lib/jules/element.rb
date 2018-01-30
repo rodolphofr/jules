@@ -42,10 +42,10 @@ module Jules
 
     def set_date(date)
       touch
-      picker = DatePicker.new
-      picker.await
-      picker.set_date date
-      picker.ok
+      date_picker = DatePicker.new
+      date_picker.await
+      date_picker.set_date(date)
+      date_picker.ok
     end
 
     def set_with_keyboard(text)
@@ -66,10 +66,13 @@ module Jules
 
     def find_elements(selector)
       _selector = "#{@selector} #{selector}"
-      elements  = calabash_proxy.query(_selector)
-      elements.map.with_index do |element, index|
+      results  = calabash_proxy.query(_selector)
+
+      elements = elements.map.with_index do |_, index|
         Element.new("#{_selector} index:#{index}")
       end
+
+      elements
     end
 
     def find_element(selector, direction: :up)
@@ -91,7 +94,7 @@ module Jules
     end
 
     def has_attr?(attr)
-      attrs.key?(attr)
+      attrs.key?(attr.to_s)
     end
 
     def selected?
@@ -125,7 +128,7 @@ module Jules
     def method_missing(method_name, *args, &block)
       if calabash_proxy.respond_to?(method_name.to_sym)
         calabash_proxy.send(method_name, selector, *args, &block)
-      elsif has_attr?(method_name.to_s)
+      elsif has_attr?(method_name)
         attrs[method_name.to_s]
       else
         super
@@ -170,14 +173,16 @@ module Jules
       @date = date.is_a?(Date) ? date : format_to_date(date)
     end
 
+    # REVISAR ESTE METODO
     def set_date(date)
-      qualified = get_qualified_date(date)
-      super qualified.strftime(PATTERN_SET_DATE)
-      @date = qualified
+      qualified_date = get_qualified_date(date)
+      formated = qualified_date.strftime(PATTERN_SET_DATE)
+      calabash_proxy.set_date(@selector, formated)
+      @date = qualified_date
     end
 
     def set_day(day)
-      set_date Date.new(@date.year, @date.month, day.to_i)
+      set_date(Date.new(@date.year, @date.month, day.to_i))
     end
 
     def get_year

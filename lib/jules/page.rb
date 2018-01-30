@@ -10,6 +10,8 @@ module Jules
       super(world, transition_duration)
     end
 
+    alias_method :displayed?, :current_page?
+
     def self.trait(selector)
       class_eval %(
         def trait
@@ -24,20 +26,6 @@ module Jules
           "#{title}"
         end
       )
-    end
-
-    def self.page_name(name)
-      class_eval %(
-        def name
-          "#{name}"
-        end
-      )
-    end
-
-    alias_method :displayed?, :current_page?
-
-    class << self
-      alias_method :section_name, :page_name
     end
 
     def go_back

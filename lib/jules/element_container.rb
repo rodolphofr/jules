@@ -8,23 +8,26 @@ module Jules
       }
     end
 
-    def elements(collection_name, selector, filter, conditions = {})
+    def elements(collection_name, selector)
       define_method collection_name.to_s do
-        results = query(selector, *filter)
+        results  = query(selector)
+        elements = []
 
-        unless results.empty?
-          results = if filter.nil?
-                      transform_in_elements(selector, results)
-                    else
-                      self.filter(results, conditions)
-                    end
+        elements = results.map.with_index do |_, index|
+          Jules::Element.new("#{selector} index:#{index}")
         end
 
-        results
+        elements
       end
     end
 
-    alias_method :collection, :elements
+    def collection(collection_name, selector, filter, options = {})
+      define_method collection_name.to_s do
+        results  = query(selector, filter)
+        contents = filter(results, options)
+        contents
+      end
+    end
 
     def section(element_name, class_name)
       class_eval %{
@@ -36,13 +39,13 @@ module Jules
 
     private
 
-    def filter(results, conditions)
+    def filter(results, options)
       contents = []
 
       results.each do |content|
         unless content.is_a? Hash
-          if conditions.key? :match
-            pattern = conditions[:match]
+          if options.key? :match
+            pattern = options[:match]
             contents << content if content.match(pattern)
           else
             contents << content
@@ -51,12 +54,6 @@ module Jules
       end
 
       contents
-    end
-
-    def transform_in_elements(selector, results)
-      results.map.with_index do |_, index|
-        Jules::Element.new("#{selector} index:#{index}")
-      end
     end
   end
 end
