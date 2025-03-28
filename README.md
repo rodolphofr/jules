@@ -124,10 +124,3 @@ end
 ```
 
 In this example, the `LoginPage` class encapsulates the details for interacting with the username field, password field, and login button. The `login` method makes the test more readable and easier to maintain since any UI changes will only require updates in this class. The automated test then uses assertions to verify that the login process resulted in the expected screen element being displayed.
-
-## Contributing
-
-Contributions to the project are very welcome! If you’d like to help improve Jules, feel free to:
-- Submit pull requests.
-- Open issues to report bugs or suggest new features.
-- Discuss improvements with the community.
